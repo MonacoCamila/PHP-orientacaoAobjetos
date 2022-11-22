@@ -1,3 +1,4 @@
-# PHP-orientacaoAobjetos
-Aulas de PHP - Orientacao a Objetos e exemplos 
-Programa 'conta bancaria'em PHP
+# PHP - Alura <br>
+Aulas de PHP - Orientacao a Objetos <br>
+Exercicios e Exemplos <br>
+Programa 'conta bancaria' em PHP
