@@ -1,21 +1,39 @@
 <?php
 
-class Conta
-{
-    
+namespace Alura\Banco\Modelo\Conta;
+
+class Conta{
+
     private $titular;
-    private $saldo = 0;
-    private static $numeroDeContas = 0; //armazenando o numero de contas instanciadas 
+    private $saldo;
+    private static $numeroDeContas = 0;
+    /**
+     * @var int $tipo 1 = Conta Corrente; 2 = Poupança
+     */
+    private $tipo;
 
-    public function __construct(Titular $titular){
-
+    public function __construct(Titular $titular, int $tipo)
+    {
         $this->titular = $titular;
         $this->saldo = 0;
+        $this->tipo = $tipo;
         self::$numeroDeContas++;
     }
 
     public function __destruct(){
         self::$numeroDeContas--;
+    }
+
+    public function saca(float $valorASacar): void
+    {
+        $tarifaSaque = $valorASacar * $this->percentualTarifa();
+        $valorSaque = $valorASacar + $tarifaSaque;
+        if ($valorSaque > $this->saldo) {
+            echo "Saldo indisponível";
+            return;
+        }
+
+        $this->saldo -= $valorSaque;
     }
 
     public static function recuperaNumeroDeContas(): int{
@@ -29,15 +47,8 @@ class Conta
             exit();
         }
     }
-
-    public function saca(float $valorASacar): void{
-        if ($valorASacar > $this->saldo) {
-            echo "Saldo indisponível";
-            return;
-        }
-
-        $this->saldo -= $valorASacar;
-    }
+    
+    abstract public function percentualTarifa(): float;
 
     public function deposita(float $valorADepositar): void{
         if ($valorADepositar < 0) {
@@ -48,16 +59,7 @@ class Conta
         $this->saldo += $valorADepositar;
     }
 
-    public function transfere(float $valorATransferir, Conta $contaDestino): void{
-        if ($valorATransferir > $this->saldo) {
-            echo "Saldo indisponível";
-            return;
-        }
-
-        $this->saca($valorATransferir);
-        $contaDestino->deposita($valorATransferir);
-    }
-
+   
     public function recuperaSaldo(): float{
         return $this->saldo;
     }
@@ -76,4 +78,5 @@ class Conta
     public function recuperarNomeTitular(): string{
         return $this->nomeTitular;
     }
+    
 }
